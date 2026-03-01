@@ -17,22 +17,10 @@ import "./App.css";
 
 export default function App() {
   const [theme, setTheme] = useState("dark");
-  const [scroll, setScroll] = useState(0);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("portfolio-theme") || "dark";
     setTheme(savedTheme);
-
-    const handleScroll = () => {
-      const totalHeight =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
-      const scrollPosition = window.scrollY;
-      setScroll((scrollPosition / totalHeight) * 100);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const toggleTheme = () => {
@@ -44,15 +32,8 @@ export default function App() {
   const isDark = theme === "dark";
 
   return (
-    <div className={`min-h-screen transition-colors duration-500 ${isDark ? "bg-black text-white" : "bg-gray-50 text-slate-900"}`}>
-      
-      {/* Scroll Progress */}
-      <div
-        className="fixed top-0 left-0 h-1 bg-green-500 z-50 transition-all duration-150"
-        style={{ width: `${scroll}%` }}
-      />
-
-      <Navbar toggleTheme={toggleTheme} isDark={isDark} />
+    <div className={`min-h-screen transition-colors duration-300 ${isDark ? "bg-black text-white" : "bg-gray-50 text-slate-900"}`}>
+      <Navbar theme={theme} toggleTheme={toggleTheme} isDark={isDark} />
       <Hero isDark={isDark} />
       <About isDark={isDark} />
       <Skills isDark={isDark} />
@@ -186,25 +167,41 @@ function About() {
 
 /* ================= SKILLS ================= */
 
-function Skills({ isDark }) {
+function Skills({ isDark, loading }) {
   const skills = [
     { name: "Full Stack Development", icon: <Code />, desc: "React, Node.js, PHP" },
     { name: "Programming", icon: <Cpu />, desc: "C, Java, Python" },
     { name: "Databases", icon: <Database />, desc: "MySQL,mongoDB,postgresql" },
   ];
-  return (
-    <section id="skills" className={`py-24 px-6 ${isDark ? "bg-zinc-950 text-white" : "bg-gray-50 text-slate-900"}`}>
-      <h2 className="text-4xl font-bold text-center mb-16">Technical Focus</h2>
 
-      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {skills.map((skill, i) => (
-          <motion.div key={i} whileHover={{ y: -6 }}
-            className={`p-8 rounded-2xl transition-all ${isDark ? "border border-zinc-800 hover:border-green-500 hover:border-2" : "bg-white shadow hover:shadow-lg"}`}>
-            <div className="mb-4 text-green-400">{skill.icon}</div>
-            <h3 className="text-xl font-semibold mb-2">{skill.name}</h3>
-            <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>{skill.desc}</p>
-          </motion.div>
-        ))}
+  return (
+    <section id="skills" className={`py-24 px-6 border-y transition-colors duration-300 ${isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-slate-200"}`}>
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center gap-4 mb-16 justify-center">
+          <div className={`h-[1px] flex-1 hidden md:block mr-4 ${isDark ? "bg-gray-800" : "bg-slate-200"}`} />
+          <h2 className="text-3xl md:text-4xl font-bold">Technical Focus</h2>
+          <div className={`h-[1px] flex-1 hidden md:block ml-4 ${isDark ? "bg-gray-800" : "bg-slate-200"}`} />
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {skills.map((skill, i) => (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              whileHover={{ y: -5 }}
+              key={i}
+              className={`p-8 rounded-2xl group transition-colors border ${isDark ? "glass-panel hover:border-green-500/50" : "bg-slate-50 border-slate-200 hover:border-green-500 shadow-sm"}`}
+            >
+              <div className={`mb-6 w-16 h-16 rounded-xl flex items-center justify-center transition-all ${isDark ? "text-green-400 bg-green-500/10 group-hover:bg-green-500 group-hover:text-black" : "text-green-600 bg-green-500/20 group-hover:bg-green-500 group-hover:text-white"}`}>
+                {skill.icon}
+              </div>
+              <h3 className={`text-xl font-semibold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>{skill.name}</h3>
+              <p className={`text-sm ${isDark ? "text-gray-500" : "text-slate-500"}`}>{skill.desc}</p>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );
