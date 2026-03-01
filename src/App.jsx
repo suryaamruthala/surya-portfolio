@@ -16,11 +16,16 @@ import "./App.css";
 
 export default function App() {
   const [theme, setTheme] = useState("dark");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Check for saved theme
     const savedTheme = localStorage.getItem("portfolio-theme") || "dark";
     setTheme(savedTheme);
+
+    // simulate loading (e.g., fetching data, assets)
+    const t = setTimeout(() => setLoading(false), 700);
+    return () => clearTimeout(t);
   }, []);
 
   const toggleTheme = () => {
@@ -34,10 +39,10 @@ export default function App() {
   return (
     <div className={`min-h-screen transition-colors duration-300 ${isDark ? "bg-black text-white" : "bg-gray-50 text-slate-900"}`}>
       <Navbar theme={theme} toggleTheme={toggleTheme} isDark={isDark} />
-      <Hero isDark={isDark} />
-      <About isDark={isDark} />
-      <Skills isDark={isDark} />
-      <Projects isDark={isDark} />
+      <Hero isDark={isDark} loading={loading} />
+      <About isDark={isDark} loading={loading} />
+      <Skills isDark={isDark} loading={loading} />
+      <Projects isDark={isDark} loading={loading} />
       <Contact isDark={isDark} />
       <Footer isDark={isDark} />
     </div>
@@ -183,12 +188,37 @@ function About({ isDark }) {
 
 /* ================= SKILLS ================= */
 
-function Skills({ isDark }) {
+function Skills({ isDark, loading }) {
   const skills = [
     { name: "Full Stack Development", icon: <Code className="w-8 h-8" />, desc: "React, Node.js, PHP, Vite" },
     { name: "Programming Languages", icon: <Cpu className="w-8 h-8" />, desc: "C, Java, Python" },
     { name: "Database Engineering", icon: <Database className="w-8 h-8" />, desc: "MySQL, PostgreSQL, MongoDB" }
   ];
+
+  if (loading) {
+    return (
+      <section id="projects" className="py-32 px-6 max-w-6xl mx-auto">
+        <div className="flex items-center gap-4 mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold">Featured Projects</h2>
+          <div className={`h-[1px] flex-1 ml-4 ${isDark ? "bg-gray-800" : "bg-slate-200"}`} />
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className={`p-8 rounded-2xl border ${isDark ? "glow-card bg-zinc-950 border-zinc-800" : "bg-white border-slate-200"}`}>
+              <div className="skeleton skeleton-title mb-4" />
+              <div className="skeleton skeleton-line mb-3" />
+              <div className="skeleton skeleton-line mb-3" />
+              <div className="flex gap-2 mt-4">
+                <div className="skeleton skeleton-chip" />
+                <div className="skeleton skeleton-chip" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="skills" className={`py-24 px-6 border-y transition-colors duration-300 ${isDark ? "bg-zinc-950 border-zinc-900" : "bg-white border-slate-200"}`}>
@@ -200,23 +230,32 @@ function Skills({ isDark }) {
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {skills.map((skill, i) => (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              whileHover={{ y: -5 }}
-              key={i}
-              className={`p-8 rounded-2xl group transition-colors border ${isDark ? "glass-panel hover:border-green-500/50" : "bg-slate-50 border-slate-200 hover:border-green-500 shadow-sm"}`}
-            >
-              <div className={`mb-6 w-16 h-16 rounded-xl flex items-center justify-center transition-all ${isDark ? "text-green-400 bg-green-500/10 group-hover:bg-green-500 group-hover:text-black" : "text-green-600 bg-green-500/20 group-hover:bg-green-500 group-hover:text-white"}`}>
-                {skill.icon}
+          {loading ? (
+            Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className={`p-8 rounded-2xl transition-colors border ${isDark ? "glass-panel" : "bg-slate-50 border-slate-200"}`}>
+                <div className="mb-6 w-16 h-16 rounded-xl skeleton" />
+                <div className="skeleton skeleton-title w-3/4 mb-3" />
+                <div className="skeleton skeleton-line" />
               </div>
-              <h3 className={`text-xl font-semibold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>{skill.name}</h3>
-              <p className={`text-sm ${isDark ? "text-gray-500" : "text-slate-500"}`}>{skill.desc}</p>
-            </motion.div>
-          ))}
+            ))
+          ) : (
+            skills.map((skill, i) => (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ y: -5 }}
+                key={i}
+                className={`p-8 rounded-2xl group transition-colors border ${isDark ? "glass-panel hover:border-green-500/50" : "bg-slate-50 border-slate-200 hover:border-green-500 shadow-sm"}`}>
+                <div className={`mb-6 w-16 h-16 rounded-xl flex items-center justify-center transition-all ${isDark ? "text-green-400 bg-green-500/10 group-hover:bg-green-500 group-hover:text-black" : "text-green-600 bg-green-500/20 group-hover:bg-green-500 group-hover:text-white"}`}>
+                  {skill.icon}
+                </div>
+                <h3 className={`text-xl font-semibold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>{skill.name}</h3>
+                <p className={`text-sm ${isDark ? "text-gray-500" : "text-slate-500"}`}>{skill.desc}</p>
+              </motion.div>
+            ))
+          )}
         </div>
       </div>
     </section>
@@ -225,7 +264,7 @@ function Skills({ isDark }) {
 
 /* ================= PROJECTS ================= */
 
-function Projects({ isDark }) {
+function Projects({ isDark, loading }) {
   const projects = [
     {
       title: "Wedding Photo Studio Management",
