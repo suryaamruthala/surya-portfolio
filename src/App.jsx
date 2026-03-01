@@ -32,7 +32,13 @@ export default function App() {
   const isDark = theme === "dark";
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDark ? "bg-black text-white" : "bg-gray-50 text-slate-900"}`}>
+    <div
+  className={`min-h-screen transition-colors duration-300 ${
+    isDark
+      ? "bg-black text-white"
+      : "bg-gray-50 text-slate-900 light-mode"
+  }`}
+>
       <Navbar theme={theme} toggleTheme={toggleTheme} isDark={isDark} />
       <Hero isDark={isDark} />
       <About isDark={isDark} />
@@ -90,9 +96,11 @@ function Hero({ isDark }) {
             Hello, world! I am
           </p>
 
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 bg-clip-text text-transparent animate-gradient-text tracking-wide whitespace-nowrap overflow-visible">
-            Surya Amruthala
-          </h1>
+          <h1
+  className="hero-name text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 bg-clip-text text-transparent animate-gradient-text tracking-wide whitespace-nowrap overflow-visible"
+>
+  Surya Amruthala
+</h1>
 
           <h2 className="text-xl md:text-2xl text-gray-400 mb-6">
             AI & ML Enthusiast | Full Stack Developer
@@ -130,10 +138,13 @@ function Hero({ isDark }) {
   transition={{ duration: 0.8 }}
   className="flex justify-center"
 >
-  <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
+  <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center profile-container">
 
-  {/* Pulsing Green Ring */}
+  {/* Base Ring */}
   <div className="ring-pulse"></div>
+
+  {/* Second Ring (hidden until hover) */}
+  <div className="ring-secondary"></div>
 
   {/* Profile Image */}
   <div className="w-[90%] h-[90%] rounded-full overflow-hidden bg-black">
@@ -185,21 +196,13 @@ function Skills({ isDark, loading }) {
 
         <div className="grid md:grid-cols-3 gap-6">
           {skills.map((skill, i) => (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              whileHover={{ y: -5 }}
-              key={i}
-              className={`p-8 rounded-2xl group transition-colors border ${isDark ? "glass-panel hover:border-green-500/50" : "bg-slate-50 border-slate-200 hover:border-green-500 shadow-sm"}`}
-            >
-              <div className={`mb-6 w-16 h-16 rounded-xl flex items-center justify-center transition-all ${isDark ? "text-green-400 bg-green-500/10 group-hover:bg-green-500 group-hover:text-black" : "text-green-600 bg-green-500/20 group-hover:bg-green-500 group-hover:text-white"}`}>
-                {skill.icon}
-              </div>
-              <h3 className={`text-xl font-semibold mb-2 ${isDark ? "text-white" : "text-slate-900"}`}>{skill.name}</h3>
-              <p className={`text-sm ${isDark ? "text-gray-500" : "text-slate-500"}`}>{skill.desc}</p>
-            </motion.div>
+            <motion.div key={i} whileHover={{ y: -6 }} className="futuristic-card">
+              <div className="futuristic-card-inner">
+                <div className="mb-4 text-green-400">{skill.icon}</div>
+                    <h3 className="text-xl font-semibold mb-2">{skill.name}</h3>
+                       <p>{skill.desc}</p>
+                 </div>
+             </motion.div>
           ))}
         </div>
       </div>
@@ -242,18 +245,30 @@ function Projects({ isDark, loading }) {
 
       <div className="grid md:grid-cols-2 gap-8">
         {projects.map((project, i) => (
-          <motion.div key={i} whileHover={{ scale: 1.03 }}
-            className={`p-8 rounded-2xl transition-all ${isDark ? "border border-zinc-800 hover:border-green-500 hover:border-2" : "bg-white shadow hover:shadow-lg"}`}>
-            <h3 className="text-2xl font-bold mb-4">{project.title}</h3>
-            <p className={`${isDark ? "text-gray-400" : "text-gray-700"} mb-6`}>{project.desc}</p>
-            <div className="flex gap-2">
-              {project.tags.map((tag) => (
-                <span key={tag} className="text-xs px-3 py-1 bg-green-400/10 text-green-400 rounded-full">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </motion.div>
+          <motion.div
+  key={i}
+  whileHover={{ scale: 1.03 }}
+  className="futuristic-card"
+>
+  <h3 className="text-2xl font-bold mb-4">
+    {project.title}
+  </h3>
+
+  <p className="mb-6">
+    {project.desc}
+  </p>
+
+  <div className="flex gap-2">
+    {project.tags.map((tag) => (
+      <span
+        key={tag}
+        className="text-xs px-3 py-1 bg-green-400/10 text-green-400 rounded-full"
+      >
+        {tag}
+      </span>
+    ))}
+  </div>
+</motion.div>
         ))}
       </div>
     </section>
