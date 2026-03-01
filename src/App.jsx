@@ -132,19 +132,19 @@ function Hero({ isDark }) {
 >
   <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
 
-    {/* Pulsing Thick Green Ring */}
-<div className="absolute w-full h-full rounded-full animate-ringThickness" />
+  {/* Pulsing Green Ring */}
+  <div className="ring-pulse"></div>
 
-    {/* Static Profile Image */}
-    <div className="w-[92%] h-[92%] rounded-full overflow-hidden bg-black">
-      <img
-        src={profile}
-        alt="Surya"
-        className="w-full h-full object-cover rounded-full"
-      />
-    </div>
-
+  {/* Profile Image */}
+  <div className="w-[90%] h-[90%] rounded-full overflow-hidden bg-black">
+    <img
+      src={profile}
+      alt="Surya"
+      className="w-full h-full object-cover rounded-full"
+    />
   </div>
+
+</div>
 </motion.div>
       </div>
     </section>

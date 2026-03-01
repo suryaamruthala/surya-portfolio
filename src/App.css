@@ -66,3 +66,31 @@
 .glow-card:hover::before {
   opacity: 1;
 }
+/* ================= PROFILE GREEN RING ================= */
+
+.ring-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+
+  /* Initial thin ring */
+  box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.8);
+
+  animation: pulseRingThickness 2.2s ease-in-out infinite;
+}
+
+@keyframes pulseRingThickness {
+  0% {
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.8);
+  }
+
+  50% {
+    /* Thick expanded ring */
+    box-shadow: 0 0 0 22px rgba(34, 197, 94, 0.35);
+  }
+
+  100% {
+    box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.8);
+  }
+}
