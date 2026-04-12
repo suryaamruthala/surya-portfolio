@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* ── LIGHT THEME (default) ──────────────────────────────── */
+  :root {
+    --color-bg:        #f0f4ff;          /* warm cool-blue tint, not plain white */
+    --color-fg:        #0f172a;          /* rich navy — high contrast */
+    --color-primary:   #2563eb;
+    --color-secondary: #7c3aed;
+    --color-accent:    #0891b2;
+    --color-card:      rgba(255, 255, 255, 0.94);   /* opaque enough to block stardust bleed */
+    --color-border:    rgba(99, 102, 241, 0.20);    /* indigo-tinted border */
+
+    /* Extra tokens for the light mode glow effects */
+    --glow-primary:    rgba(37, 99, 235, 0.18);
+    --glow-secondary:  rgba(124, 58, 237, 0.15);
+  }
+
+  /* ── DARK THEME — untouched ─────────────────────────────── */
+  .dark {
+    --color-bg:        #030712;
+    --color-fg:        #f9fafb;
+    --color-primary:   #3b82f6;
+    --color-secondary: #8b5cf6;
+    --color-accent:    #06b6d4;
+    --color-card:      rgba(10, 15, 28, 0.55);
+    --color-border:    rgba(255, 255, 255, 0.10);
+    --glow-primary:    rgba(59, 130, 246, 0.15);
+    --glow-secondary:  rgba(139, 92, 246, 0.12);
+  }
+
+  body {
+    @apply bg-background text-foreground transition-colors duration-300;
+  }
+
+  /* ── Premium light-mode body background ─────────────────── */
+  /* Layered gradient mesh — only active when NOT in dark mode */
+  :root:not(.dark) body {
+    background-color: #f0f4ff;
+    background-image:
+      /* Top-left azure aurora */
+      radial-gradient(ellipse at 0% 0%,   rgba(59, 130, 246, 0.22) 0%, transparent 55%),
+      /* Top-center violet bloom */
+      radial-gradient(ellipse at 50% -5%,  rgba(139, 92, 246, 0.18) 0%, transparent 50%),
+      /* Top-right cyan haze */
+      radial-gradient(ellipse at 100% 0%, rgba(6, 182, 212, 0.16) 0%, transparent 50%),
+      /* Bottom-left rose whisper */
+      radial-gradient(ellipse at 0% 100%, rgba(236, 72, 153, 0.10) 0%, transparent 50%),
+      /* Bottom-right indigo depth */
+      radial-gradient(ellipse at 100% 100%, rgba(99, 102, 241, 0.12) 0%, transparent 50%);
+  }
+}
+
+
+/* ── Light mode: form inputs readable ───────────────────────── */
+:root:not(.dark) input,
+:root:not(.dark) textarea {
+  color: #0f172a !important;
+}
+:root:not(.dark) input::placeholder,
+:root:not(.dark) textarea::placeholder {
+  color: #64748b !important;
+}
+
+/* ── Light mode only: skill tabs turn opaque white on hover ── */
+:root:not(.dark) .skill-tab-inactive:hover {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+@layer utilities {
+  /* ── GLASS — adapts beautifully between themes ─────────── */
+  .glass {
+    @apply backdrop-blur-xl border shadow-xl;
+    background-color: var(--color-card);
+    border-color:     var(--color-border);
+  }
+
+  /* Light mode glass gets a crisp white frosted look with a tinted glow shadow */
+  :root:not(.dark) .glass {
+    background-color: rgba(255, 255, 255, 0.94);
+    border-color:     rgba(99, 102, 241, 0.18);
+    box-shadow:
+      0 8px 32px rgba(37, 99, 235, 0.10),
+      0 2px 8px  rgba(99, 102, 241, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 1);
+  }
+
+  .glass-hover {
+    @apply hover:bg-white/10 hover:border-white/20 transition-all duration-300;
+  }
+
+  /* ── GRADIENT TEXT ──────────────────────────────────────── */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-cyan-500;
+  }
+
+  /* In light mode, the gradient can be slightly deeper for contrast on white */
+  :root:not(.dark) .text-gradient {
+    background-image: linear-gradient(
+      to right,
+      #1d4ed8,   /* blue-700 */
+      #7c3aed,   /* violet-600 */
+      #0891b2    /* cyan-600 */
+    );
+  }
+
+  /* ── MESH BACKGROUND ────────────────────────────────────── */
+  /* Used on specific sections (e.g., projects border section) */
+  .bg-mesh {
+    background-color: var(--color-bg);
+    background-image:
+      radial-gradient(at 0% 0%,   rgba(59, 130, 246, 0.22) 0, transparent 50%),
+      radial-gradient(at 50% 0%,  rgba(139, 92, 246, 0.20) 0, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.18) 0, transparent 50%);
+  }
+
+  /* Dark mode mesh stays the same */
+  .dark .bg-mesh {
+    background-color: #030712;
+    background-image:
+      radial-gradient(at 0% 0%,   hsla(253,16%,7%,1)  0, transparent 50%),
+      radial-gradient(at 50% 0%,  hsla(225,39%,30%,1) 0, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+  }
+
+  /* ── PREMIUM LIGHT MODE CARD HOVER ─────────────────────── */
+  /* Adds a colorful tinted glow on hover for cards in light mode */
+  :root:not(.dark) .glass:hover {
+    box-shadow:
+      0 16px 48px rgba(37, 99, 235, 0.16),
+      0 4px 16px  rgba(99, 102, 241, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    border-color: rgba(99, 102, 241, 0.30);
+  }
+
+  /* ── HIDE SCROLLBAR ──────────────────────────────────────── */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+}
