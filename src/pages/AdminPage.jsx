@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { getSkills, addSkill, updateSkill, deleteSkill } from '../services/skillsService';
 import { getCertifications, addCertification, updateCertification, deleteCertification, uploadCertificationFile } from '../services/certificationsService';
-import { getProfile, upsertProfile, uploadProfilePhoto, uploadResume } from '../services/profileService';
+import { getProfile, upsertProfile, uploadProfilePhoto, uploadResume, deleteProfilePhoto } from '../services/profileService';
 import { FiTrash2, FiEdit2, FiPlus, FiAward, FiCode, FiUser, FiUpload, FiSave, FiFile } from 'react-icons/fi';
 
 const TABS = ['profile', 'skills', 'certifications'];
@@ -15,6 +15,7 @@ export const AdminPage = () => {
   const [profile, setProfile] = useState({ name: '', title: '', subtitle: '', bio: '', bio2: '', resume_url: '', github_url: '', linkedin_url: '', email: '', photo_url: '' });
   const [profileSaving, setProfileSaving] = useState(false);
   const [photoUploading, setPhotoUploading] = useState(false);
+  const [photoDeleting, setPhotoDeleting] = useState(false);
   const [resumeUploading, setResumeUploading] = useState(false);
   const [certUploading, setCertUploading] = useState(false);
   const [profileMsg, setProfileMsg] = useState('');
@@ -57,6 +58,17 @@ export const AdminPage = () => {
       setProfile(p => ({ ...p, photo_url: url }));
     } catch (err) { alert('Photo upload failed: ' + err.message); }
     setPhotoUploading(false);
+  };
+
+  // Profile photo delete
+  const handlePhotoDelete = async () => {
+    if (!window.confirm("Are you sure you want to remove your current profile photo?")) return;
+    setPhotoDeleting(true);
+    try {
+      await deleteProfilePhoto(profile.photo_url);
+      setProfile(p => ({ ...p, photo_url: null }));
+    } catch (err) { alert('Photo delete failed: ' + err.message); }
+    setPhotoDeleting(false);
   };
 
   // Profile resume upload
@@ -186,11 +198,22 @@ export const AdminPage = () => {
                   <p className="font-bold mb-2">Profile Photo</p>
                   <p className="text-sm text-gray-400 mb-3">Upload to Supabase Storage (portfolio-assets bucket)</p>
                   <input type="file" accept="image/*" ref={fileInputRef} onChange={handlePhotoUpload} className="hidden" />
-                  <button onClick={() => fileInputRef.current.click()} disabled={photoUploading}
-                    className="flex items-center gap-2 px-5 py-2.5 glass rounded-xl font-bold text-primary hover:bg-primary/20 transition-all disabled:opacity-50"
-                  >
-                    <FiUpload /> {photoUploading ? 'Uploading...' : 'Upload Photo'}
-                  </button>
+                  
+                  <div className="flex flex-wrap gap-3">
+                    <button onClick={() => fileInputRef.current.click()} disabled={photoUploading || photoDeleting}
+                      className="flex items-center gap-2 px-5 py-2.5 glass rounded-xl font-bold text-primary hover:bg-primary/20 transition-all disabled:opacity-50"
+                    >
+                      <FiUpload /> {photoUploading ? 'Uploading...' : 'Edit / Update Photo'}
+                    </button>
+
+                    {profile.photo_url && (
+                      <button onClick={handlePhotoDelete} disabled={photoUploading || photoDeleting}
+                        className="flex items-center gap-2 px-5 py-2.5 bg-red-500/10 text-red-500 rounded-xl font-bold hover:bg-red-500/20 shadow-none border border-red-500/20 transition-all disabled:opacity-50"
+                      >
+                        <FiTrash2 /> {photoDeleting ? 'Removing...' : 'Remove'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 
