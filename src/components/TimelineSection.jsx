@@ -109,9 +109,13 @@ function TimelineCardItem({ item, index }) {
           <h4 className="text-lg text-gray-500 dark:text-gray-400 font-medium mb-4">
             {item.organization}
           </h4>
-          <p className="text-gray-500 dark:text-gray-400 leading-relaxed text-sm md:text-base">
-            {item.description}
-          </p>
+          <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-in-out">
+            <div className="overflow-hidden">
+              <p className="text-gray-500 dark:text-gray-400 leading-relaxed text-sm md:text-base">
+                {item.description}
+              </p>
+            </div>
+          </div>
 
           {item.document_url && (
             <div className="mt-6 flex justify-center">

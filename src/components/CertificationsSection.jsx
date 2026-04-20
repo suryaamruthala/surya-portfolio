@@ -243,7 +243,11 @@ export const CertificationsSection = () => {
 
   useEffect(() => {
     getCertifications()
-      .then(data => { setCertifications(data || []); setLoading(false); })
+      .then(data => {
+        const sorted = (data || []).sort((a, b) => new Date(b.issue_date) - new Date(a.issue_date));
+        setCertifications(sorted);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, []);
 
@@ -275,11 +279,24 @@ export const CertificationsSection = () => {
           <p className="text-lg text-gray-400 max-w-xl mx-auto">Professionally validated expertise across platforms and institutions.</p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {certifications.map((cert, i) => (
-            <CertCard key={cert.id} cert={cert} index={i} onPreview={setSelected} />
-          ))}
-        </div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="relative glass rounded-3xl border-4 border-white/20 ring-4 ring-primary/60 shadow-[0_0_60px_-10px_rgba(59,130,246,0.7)] overflow-hidden"
+        >
+          {/* Subtle background glow inside container */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 pointer-events-none" />
+          
+          <div className="max-h-[650px] overflow-y-auto p-6 md:p-8 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {certifications.map((cert, i) => (
+                <CertCard key={cert.id} cert={cert} index={i} onPreview={setSelected} />
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       {selected && <Viewer cert={selected} onClose={() => setSelected(null)} />}
