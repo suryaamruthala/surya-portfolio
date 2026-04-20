@@ -22,6 +22,7 @@ export const Navbar = () => {
     { name: 'About',          path: '#about' },
     { name: 'Skills',         path: '#skills' },
     { name: 'Certifications', path: '#certifications' },
+    { name: 'Timeline',       path: '#experience' },
     { name: 'Projects',       path: '#projects' },
     { name: 'Contact',        path: '#contact' },
   ];

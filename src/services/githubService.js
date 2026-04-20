@@ -6,7 +6,7 @@ export const getGithubData = async () => {
     const profileRes = await fetch(`https://api.github.com/users/${username}`);
     const profile = await profileRes.json();
 
-    const reposRes = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=6`);
+    const reposRes = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
     const repos = await reposRes.json();
 
     return { profile, repos };

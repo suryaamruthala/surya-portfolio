@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { HeroSection } from '../components/HeroSection';
 import { AboutSection } from '../components/AboutSection';
+import { TimelineSection } from '../components/TimelineSection';
 import { SkillsSection } from '../components/SkillsSection';
 import { CertificationsSection } from '../components/CertificationsSection';
 import { ContactSection } from '../components/ContactSection';
@@ -126,6 +127,7 @@ export const HomePage = () => {
     <div className="w-full space-y-0">
       <HeroSection />
       <AboutSection />
+      <TimelineSection />
       <SkillsSection />
       <CertificationsSection />
 

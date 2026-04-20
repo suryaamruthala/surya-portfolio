@@ -1,11 +1,12 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { getSkills, addSkill, updateSkill, deleteSkill } from '../services/skillsService';
 import { getCertifications, addCertification, updateCertification, deleteCertification, uploadCertificationFile } from '../services/certificationsService';
+import { getTimeline, addTimelineItem, updateTimelineItem, deleteTimelineItem, uploadTimelineDocument } from '../services/timelineService';
 import { getProfile, upsertProfile, uploadProfilePhoto, uploadResume, deleteProfilePhoto } from '../services/profileService';
-import { FiTrash2, FiEdit2, FiPlus, FiAward, FiCode, FiUser, FiUpload, FiSave, FiFile } from 'react-icons/fi';
+import { FiTrash2, FiEdit2, FiPlus, FiAward, FiCode, FiUser, FiUpload, FiSave, FiFile, FiClock } from 'react-icons/fi';
 
-const TABS = ['profile', 'skills', 'certifications'];
-const TAB_ICONS = { profile: <FiUser />, skills: <FiCode />, certifications: <FiAward /> };
+const TABS = ['profile', 'skills', 'certifications', 'timeline'];
+const TAB_ICONS = { profile: <FiUser />, skills: <FiCode />, certifications: <FiAward />, timeline: <FiClock /> };
 
 export const AdminPage = () => {
   const [activeTab, setActiveTab] = useState('profile');
@@ -19,13 +20,16 @@ export const AdminPage = () => {
   const [resumeUploading, setResumeUploading] = useState(false);
   const [certUploading, setCertUploading] = useState(false);
   const [profileMsg, setProfileMsg] = useState('');
+  const [timelineDocUploading, setTimelineDocUploading] = useState(false);
   const fileInputRef = useRef();
   const resumeInputRef = useRef();
   const certInputRef = useRef();
+  const timelineDocInputRef = useRef();
 
   // List states
   const [skills, setSkills] = useState([]);
   const [certifications, setCertifications] = useState([]);
+  const [timeline, setTimeline] = useState([]);
 
   // Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,6 +45,7 @@ export const AdminPage = () => {
       }
       if (activeTab === 'skills') setSkills(await getSkills());
       if (activeTab === 'certifications') setCertifications(await getCertifications());
+      if (activeTab === 'timeline') setTimeline(await getTimeline());
     } catch (err) { console.error(err); }
     if (!silent) setLoading(false);
   }, [activeTab]);
@@ -98,6 +103,18 @@ export const AdminPage = () => {
     setCertUploading(false);
   };
 
+  // Timeline Doc upload
+  const handleTimelineDocUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setTimelineDocUploading(true);
+    try {
+      const url = await uploadTimelineDocument(file);
+      setFormData(prev => ({ ...prev, document_url: url }));
+    } catch (err) { alert('Document upload failed: ' + err.message); }
+    setTimelineDocUploading(false);
+  };
+
   // Profile save
   const handleProfileSave = async () => {
     setProfileSaving(true);
@@ -118,6 +135,8 @@ export const AdminPage = () => {
     } else if (activeTab === 'certifications') {
       const formattedDate = entity?.issue_date ? new Date(entity.issue_date).toISOString().split('T')[0] : '';
       setFormData(entity ? { ...entity, issue_date: formattedDate } : { title: '', issuer: '', issuer_logo_url: '', issue_date: '', credential_url: '' });
+    } else if (activeTab === 'timeline') {
+      setFormData(entity ? { ...entity } : { title: '', organization: '', date: '', description: '', type: 'experience', document_url: '' });
     }
     setIsModalOpen(true);
   };
@@ -131,6 +150,8 @@ export const AdminPage = () => {
         currentEntity ? await updateSkill(currentEntity.id, formData) : await addSkill(formData);
       } else if (activeTab === 'certifications') {
         currentEntity ? await updateCertification(currentEntity.id, formData) : await addCertification(formData);
+      } else if (activeTab === 'timeline') {
+        currentEntity ? await updateTimelineItem(currentEntity.id, formData) : await addTimelineItem(formData);
       }
       handleCloseModal();
       fetchData(true); // silent fetch for instant feel
@@ -146,10 +167,12 @@ export const AdminPage = () => {
     // Optimistic UI update
     if (activeTab === 'skills') setSkills(s => s.filter(x => x.id !== id));
     if (activeTab === 'certifications') setCertifications(c => c.filter(x => x.id !== id));
+    if (activeTab === 'timeline') setTimeline(c => c.filter(x => x.id !== id));
 
     try {
       if (activeTab === 'skills') await deleteSkill(id);
       if (activeTab === 'certifications') await deleteCertification(id);
+      if (activeTab === 'timeline') await deleteTimelineItem(id);
       fetchData(true); // silent background sync
     } catch (err) {
       // Revert if failed
@@ -297,7 +320,7 @@ export const AdminPage = () => {
                 <button onClick={() => handleOpenModal()}
                   className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-xl hover:bg-blue-600 transition-colors shadow-lg shadow-primary/20"
                 >
-                  <FiPlus size={20} /> Add {activeTab === 'skills' ? 'Skill' : 'Certification'}
+                  <FiPlus size={20} /> Add {activeTab === 'skills' ? 'Skill' : activeTab === 'certifications' ? 'Certification' : 'Experience'}
                 </button>
               </div>
 
@@ -314,6 +337,7 @@ export const AdminPage = () => {
                     <tr className="bg-black/20 border-b border-border">
                       {activeTab === 'skills' && <><th className="p-5 font-semibold text-gray-300">Name</th><th className="p-5 font-semibold text-gray-300">Category</th></>}
                       {activeTab === 'certifications' && <><th className="p-5 font-semibold text-gray-300">Title</th><th className="p-5 font-semibold text-gray-300 hidden md:table-cell">Issuer & Date</th></>}
+                      {activeTab === 'timeline' && <><th className="p-5 font-semibold text-gray-300">Role/Degree</th><th className="p-5 font-semibold text-gray-300">Org & Date</th><th className="p-5 font-semibold text-gray-300 text-center">Type</th></>}
                       <th className="p-5 font-semibold text-gray-300 text-right">Actions</th>
                     </tr>
                   </thead>
@@ -338,8 +362,19 @@ export const AdminPage = () => {
                         </td>
                       </tr>
                     ))}
-                    {((activeTab === 'skills' && skills.length === 0) || (activeTab === 'certifications' && certifications.length === 0)) && (
-                      <tr><td colSpan="3" className="p-10 text-center text-gray-500 italic">No {activeTab} found. Add one!</td></tr>
+                    {activeTab === 'timeline' && timeline.map(item => (
+                      <tr key={item.id} className="border-b border-border hover:bg-white/5">
+                        <td className="p-5 font-medium">{item.title}</td>
+                        <td className="p-5 text-sm text-gray-400">{item.organization}<br /><span className="text-xs">{item.date}</span></td>
+                        <td className="p-5 text-center"><span className="px-3 py-1 bg-white/10 rounded-full text-xs uppercase tracking-widest">{item.type}</span></td>
+                        <td className="p-5 text-right">
+                          <button onClick={() => handleOpenModal(item)} className="p-2 text-primary hover:bg-primary/20 rounded mr-2"><FiEdit2 size={18} /></button>
+                          <button onClick={() => handleDelete(item.id)} className="p-2 text-red-500 hover:bg-red-500/20 rounded"><FiTrash2 size={18} /></button>
+                        </td>
+                      </tr>
+                    ))}
+                    {((activeTab === 'skills' && skills.length === 0) || (activeTab === 'certifications' && certifications.length === 0) || (activeTab === 'timeline' && timeline.length === 0)) && (
+                      <tr><td colSpan="4" className="p-10 text-center text-gray-500 italic">No {activeTab} found. Add one!</td></tr>
                     )}
                   </tbody>
                 </table>
@@ -399,6 +434,30 @@ export const AdminPage = () => {
                       <input type="file" accept="image/*,application/pdf" ref={certInputRef} onChange={handleCertUpload} className="hidden" />
                       <button type="button" onClick={() => certInputRef.current.click()} disabled={certUploading} className="flex items-center justify-center gap-2 px-4 py-3 bg-white/5 border border-border rounded-xl hover:bg-white/10 transition-colors disabled:opacity-50 whitespace-nowrap font-bold">
                         <FiUpload /> {certUploading ? '...' : 'Upload'}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+              {activeTab === 'timeline' && (
+                <>
+                  <div><label className="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Title *</label><input required type="text" value={formData.title || ''} onChange={e => setFormData({...formData, title: e.target.value})} placeholder="Software Engineer" className="w-full px-4 py-3 bg-white/5 border border-border rounded-xl focus:outline-none focus:border-primary text-white" /></div>
+                  <div><label className="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Organization *</label><input required type="text" value={formData.organization || ''} onChange={e => setFormData({...formData, organization: e.target.value})} placeholder="Company or University" className="w-full px-4 py-3 bg-white/5 border border-border rounded-xl focus:outline-none focus:border-primary text-white" /></div>
+                  <div><label className="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Date / Timespan *</label><input required type="text" value={formData.date || ''} onChange={e => setFormData({...formData, date: e.target.value})} placeholder="2020 - 2023" className="w-full px-4 py-3 bg-white/5 border border-border rounded-xl focus:outline-none focus:border-primary text-white" /></div>
+                  <div><label className="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Description *</label><textarea required rows="3" value={formData.description || ''} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full px-4 py-3 bg-white/5 border border-border rounded-xl focus:outline-none focus:border-primary text-white resize-none"></textarea></div>
+                  <div><label className="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Type *</label>
+                    <select required value={formData.type || 'experience'} onChange={e => setFormData({...formData, type: e.target.value})} className="w-full px-4 py-3 bg-black border border-border rounded-xl focus:outline-none focus:border-primary text-white">
+                      <option value="experience">Experience</option>
+                      <option value="education">Education</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-widest">Supporting Document (PDF/Image)</label>
+                    <div className="flex gap-3">
+                      <input type="url" value={formData.document_url || ''} onChange={e => setFormData({...formData, document_url: e.target.value})} placeholder="https://..." className="w-full px-4 py-3 bg-white/5 border border-border rounded-xl focus:outline-none focus:border-primary text-white" />
+                      <input type="file" accept="image/*,application/pdf" ref={timelineDocInputRef} onChange={handleTimelineDocUpload} className="hidden" />
+                      <button type="button" onClick={() => timelineDocInputRef.current.click()} disabled={timelineDocUploading} className="flex items-center justify-center gap-2 px-4 py-3 bg-white/5 border border-border rounded-xl hover:bg-white/10 transition-colors disabled:opacity-50 whitespace-nowrap font-bold">
+                        <FiUpload /> {timelineDocUploading ? '...' : 'Upload'}
                       </button>
                     </div>
                   </div>
