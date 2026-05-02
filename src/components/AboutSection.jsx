@@ -4,10 +4,10 @@ import { FiUser, FiCode, FiDatabase, FiGlobe } from 'react-icons/fi';
 import { getProfile } from '../services/profileService';
 
 const highlights = [
-  { icon: <FiCode className="text-blue-400" size={24} />,     title: 'Frontend',  desc: 'Crafting immersive, responsive React applications.',       glow: 'rgba(59,130,246,0.3)' },
-  { icon: <FiDatabase className="text-purple-400" size={24} />, title: 'Backend', desc: 'Building robust Java/Spring Boot microservices.',           glow: 'rgba(168,85,247,0.3)' },
-  { icon: <FiGlobe className="text-cyan-400" size={24} />,   title: 'Full Stack', desc: 'Seamlessly bridging the gap between design and logic.',    glow: 'rgba(6,182,212,0.3)' },
-  { icon: <FiUser className="text-indigo-400" size={24} />,  title: 'Passionate', desc: 'Always learning and pushing the boundaries of tech.',      glow: 'rgba(99,102,241,0.3)' },
+  { icon: <FiCode className="text-blue-400" size={24} />, title: 'Frontend', desc: 'Crafting immersive, responsive React applications.', glow: 'rgba(59,130,246,0.3)' },
+  { icon: <FiDatabase className="text-purple-400" size={24} />, title: 'Backend', desc: 'Building robust Java/Spring Boot microservices.', glow: 'rgba(168,85,247,0.3)' },
+  { icon: <FiGlobe className="text-cyan-400" size={24} />, title: 'Full Stack', desc: 'Seamlessly bridging the gap between design and logic.', glow: 'rgba(6,182,212,0.3)' },
+  { icon: <FiUser className="text-indigo-400" size={24} />, title: 'Passionate', desc: 'Always learning and pushing the boundaries of tech.', glow: 'rgba(99,102,241,0.3)' },
 ];
 
 function HighlightCard({ item, index }) {
@@ -79,7 +79,7 @@ export const AboutSection = () => {
     getProfile().then(setProfile).catch(console.error);
   }, []);
 
-  const bio  = profile?.bio  || 'I am a dedicated Full Stack Developer with a strong focus on Java and React. With a background in Computer Science, I specialize in building scalable web applications that prioritize user experience and performance.';
+  const bio = profile?.bio || 'I am a dedicated Full Stack Developer with a strong focus on Java and React. With a background in Computer Science, I specialize in building scalable web applications that prioritize user experience and performance.';
   const bio2 = profile?.bio2 || 'Currently, I am exploring the intersections of Artificial Intelligence and Web Technologies to create more intelligent and adaptive digital platforms.';
 
   return (
@@ -99,7 +99,7 @@ export const AboutSection = () => {
           transition={{ duration: 0.7 }}
           className="text-center mb-20"
         >
-          <h2 className="text-4xl md:text-6xl font-black mb-6 text-gradient inline-block">About Me</h2>
+          <h2 className="text-4xl md:text-6xl font-black mb-6 text-gradient inline-block pb-2 px-2">About Surya</h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed italic">
             "I turn complex problems into simple, beautiful, and intuitive digital solutions."
           </p>

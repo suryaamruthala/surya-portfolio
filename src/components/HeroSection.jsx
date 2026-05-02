@@ -51,16 +51,16 @@ export const HeroSection = () => {
   const orbY1 = useTransform(scrollY, [0, 600], [0, -120]);
   const orbY2 = useTransform(scrollY, [0, 600], [0, -70]);
   const avatarY = useTransform(scrollY, [0, 600], [0, 80]);
-  const textY   = useTransform(scrollY, [0, 600], [0, 50]);
+  const textY = useTransform(scrollY, [0, 600], [0, 50]);
 
   useEffect(() => {
     getProfile().then(setProfile).catch(console.error);
   }, []);
 
-  const name      = profile?.name      || 'Surya Amruthala';
-  const title     = profile?.title     || 'Full Stack Developer';
-  const subtitle  = profile?.subtitle  || 'I Build Scalable Enterprise Applications & Modern Full-Stack Experiences';
-  const photoUrl  = profile?.photo_url || null;
+  const name = profile?.name || 'Surya Amruthala';
+  const title = profile?.title || 'Full Stack Developer & AI Enthusiast';
+  const subtitle = profile?.subtitle || 'Hi, I\'m Surya Amruthala, passionate about building intelligent systems and scalable enterprise applications.';
+  const photoUrl = profile?.photo_url || null;
   const resumeUrl = profile?.resume_url || '/resume.pdf';
 
   const handleDownloadResume = async (e) => {
@@ -139,85 +139,84 @@ export const HeroSection = () => {
 
       {/* Avatar + orbit — parallax */}
       <motion.div style={{ y: avatarY }} className="relative mb-12">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-        whileHover={{ scale: 1.05 }}
-        className="relative cursor-default"
-      >
-        <div className="absolute inset-[-40px] animate-[spin_12s_linear_infinite] pointer-events-none">
-          <div className="absolute inset-0 rounded-full border border-primary/20 border-dashed" />
-          <div className="absolute inset-0">
-            <motion.div whileHover={{ scale: 1.5 }} className="absolute top-0 left-1/2 -ml-3 w-6 h-6 bg-gradient-to-tr from-cyan-400 to-blue-600 rounded-full shadow-[0_0_20px_rgba(6,182,212,0.8)]" />
-          </div>
-          <div className="absolute inset-0 rotate-[120deg]">
-            <div className="absolute top-0 left-1/2 -ml-2 w-4 h-4 bg-gradient-to-tr from-purple-400 to-pink-500 rounded-full shadow-[0_0_15px_rgba(168,85,247,0.8)]" />
-          </div>
-          <div className="absolute inset-0 rotate-[240deg]">
-            <div className="absolute top-0 left-1/2 -ml-2.5 w-5 h-5 bg-gradient-to-tr from-yellow-400 to-orange-500 rounded-full shadow-[0_0_15px_rgba(250,204,21,0.8)]" />
-          </div>
-        </div>
-
         <motion.div
-          animate={{ boxShadow: ['0 0 20px rgba(59,130,246,0.3)', '0 0 50px rgba(139,92,246,0.5)', '0 0 20px rgba(59,130,246,0.3)'] }}
-          transition={{ duration: 3, repeat: Infinity }}
-          className="w-40 h-40 md:w-56 md:h-56 rounded-full p-2 bg-gradient-to-tr from-primary via-secondary to-accent"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+          whileHover={{ scale: 1.05 }}
+          className="relative cursor-default"
         >
-          <div className="w-full h-full rounded-full overflow-hidden border-4 border-background bg-card">
-            {photoUrl ? (
-              <img src={photoUrl} alt={name} className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/30 to-secondary/30 text-5xl font-black text-white">
-                {name.charAt(0)}
-              </div>
-            )}
+          <div className="absolute inset-[-40px] animate-[spin_12s_linear_infinite] pointer-events-none">
+            <div className="absolute inset-0 rounded-full border border-primary/20 border-dashed" />
+            <div className="absolute inset-0">
+              <motion.div whileHover={{ scale: 1.5 }} className="absolute top-0 left-1/2 -ml-3 w-6 h-6 bg-gradient-to-tr from-cyan-400 to-blue-600 rounded-full shadow-[0_0_20px_rgba(6,182,212,0.8)]" />
+            </div>
+            <div className="absolute inset-0 rotate-[120deg]">
+              <div className="absolute top-0 left-1/2 -ml-2 w-4 h-4 bg-gradient-to-tr from-purple-400 to-pink-500 rounded-full shadow-[0_0_15px_rgba(168,85,247,0.8)]" />
+            </div>
+            <div className="absolute inset-0 rotate-[240deg]">
+              <div className="absolute top-0 left-1/2 -ml-2.5 w-5 h-5 bg-gradient-to-tr from-yellow-400 to-orange-500 rounded-full shadow-[0_0_15px_rgba(250,204,21,0.8)]" />
+            </div>
           </div>
+
+          <motion.div
+            animate={{ boxShadow: ['0 0 20px rgba(59,130,246,0.3)', '0 0 50px rgba(139,92,246,0.5)', '0 0 20px rgba(59,130,246,0.3)'] }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="w-40 h-40 md:w-56 md:h-56 rounded-full p-2 bg-gradient-to-tr from-primary via-secondary to-accent"
+          >
+            <div className="w-full h-full rounded-full overflow-hidden border-4 border-background bg-card">
+              {photoUrl ? (
+                <img src={photoUrl} alt={name} className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/30 to-secondary/30 text-5xl font-black text-white">
+                  {name.charAt(0)}
+                </div>
+              )}
+            </div>
+          </motion.div>
+          <motion.div
+            animate={{ opacity: [0.15, 0.3, 0.15], scale: [1.1, 1.15, 1.1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="absolute inset-0 rounded-full border-2 border-white/20"
+          />
         </motion.div>
-        <motion.div
-          animate={{ opacity: [0.15, 0.3, 0.15], scale: [1.1, 1.15, 1.1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute inset-0 rounded-full border-2 border-white/20"
-        />
-      </motion.div>
       </motion.div>
 
       {/* Text — parallax */}
       <motion.div style={{ y: textY }} className="flex flex-col items-center">
-      <motion.h1
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, delay: 0.2 }}
-        className="text-5xl md:text-8xl font-black mb-6 tracking-tight"
-      >
-        Hi, I'm{' '}
-        <motion.span
-          className="text-gradient"
-          initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-          transition={{ duration: 0.8, delay: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="text-5xl md:text-8xl font-black mb-6 tracking-tight"
         >
-          {name}
-        </motion.span>
-      </motion.h1>
+          <motion.span
+            className="text-gradient"
+            initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ duration: 0.8, delay: 0.75, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {name}
+          </motion.span>
+        </motion.h1>
 
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.35 }}
-        className="text-lg md:text-2xl text-primary font-bold mb-4 uppercase tracking-widest"
-      >
-        {title}
-      </motion.p>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.35 }}
+          className="text-lg md:text-2xl text-primary font-bold mb-4 uppercase tracking-widest"
+        >
+          {title}
+        </motion.h2>
 
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.45 }}
-        className="text-xl md:text-2xl text-gray-400 mb-12 max-w-3xl leading-relaxed font-medium"
-      >
-        {subtitle}
-      </motion.p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.45 }}
+          className="text-xl md:text-2xl text-gray-400 mb-12 max-w-3xl leading-relaxed font-medium"
+        >
+          {subtitle}
+        </motion.p>
       </motion.div>{/* end parallax text wrapper */}
 
       {/* CTA Buttons — outside parallax so they never shrink on scroll */}

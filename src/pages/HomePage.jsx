@@ -148,7 +148,7 @@ export const HomePage = () => {
               transition={{ duration: 0.7 }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl md:text-6xl font-black mb-6 text-gradient inline-block">Featured Work</h2>
+              <h2 className="text-4xl md:text-6xl font-black mb-6 text-gradient inline-block pb-2 px-2">Surya Amruthala's Projects</h2>
               <p className="text-xl text-gray-400 max-w-2xl mx-auto">
                 A selection of my latest open-source projects directly from GitHub.
               </p>
