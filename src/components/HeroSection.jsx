@@ -60,7 +60,7 @@ export const HeroSection = () => {
   const name = profile?.name || 'Surya Amruthala';
   const title = profile?.title || 'Full Stack Developer & AI Enthusiast';
   const subtitle = profile?.subtitle || 'Hi, I\'m Surya Amruthala, passionate about building intelligent systems and scalable enterprise applications.';
-  const photoUrl = profile?.photo_url || null;
+  const photoUrl = profile?.photo_url || '/profile.png';
   const resumeUrl = profile?.resume_url || '/resume.pdf';
 
   const handleDownloadResume = async (e) => {

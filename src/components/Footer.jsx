@@ -26,13 +26,18 @@ export const Footer = () => {
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
         {/* Brand */}
         <div className="flex flex-col items-center md:items-start gap-3">
-          <motion.span
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: 'spring', stiffness: 400 }}
-            className="text-3xl font-black tracking-tighter text-gradient cursor-default"
-          >
-            SA.
-          </motion.span>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 via-purple-600 to-cyan-400 shadow-lg shadow-purple-500/30">
+              <span className="text-white text-sm font-black tracking-tight">SA</span>
+            </div>
+            <motion.span
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: 'spring', stiffness: 400 }}
+              className="text-2xl font-black tracking-tight text-gradient cursor-default"
+            >
+              Surya<span className="text-white/70">.</span>
+            </motion.span>
+          </div>
           <p className="text-gray-500 max-w-xs text-center md:text-left text-sm">
             Building the future of the web with intelligence and precision.
           </p>

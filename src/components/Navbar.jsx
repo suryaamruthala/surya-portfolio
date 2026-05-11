@@ -45,14 +45,11 @@ export const Navbar = () => {
       {/* Logo */}
       <div className="flex items-center gap-8">
         <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.95 }} transition={{ type: 'spring', stiffness: 400 }}>
-          <Link to="/" className="text-2xl font-black tracking-tighter text-gradient relative group">
-            SA.
-            <motion.div
-              className="absolute -bottom-1 left-0 h-[2px] bg-gradient-to-r from-blue-400 to-purple-500 rounded-full"
-              initial={{ width: 0 }}
-              whileHover={{ width: '100%' }}
-              transition={{ duration: 0.3 }}
-            />
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 via-purple-600 to-cyan-400 shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/60 transition-shadow duration-300">
+              <span className="text-white text-sm font-black tracking-tight">SA</span>
+            </div>
+            <span className="text-xl font-black tracking-tight text-gradient">Surya<span className="text-white/70">.</span></span>
           </Link>
         </motion.div>
 
